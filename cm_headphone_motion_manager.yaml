@@ -1,0 +1,10 @@
+name: CMHeadphoneMotionManager
+language: objc
+output: "cm_headphone_motion_manager_bindings.dart"
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - "CMHeadphoneMotionManager"
+headers:
+  entry-points:
+    - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework/Headers/CMHeadphoneMotionManager.h"
