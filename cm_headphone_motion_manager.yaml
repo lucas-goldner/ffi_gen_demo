@@ -1,4 +1,4 @@
-name: CMHeadphoneMotionManager
+name: CMHeadphoneMotionManagerLibrary
 language: objc
 output: "cm_headphone_motion_manager_bindings.dart"
 exclude-all-by-default: true
