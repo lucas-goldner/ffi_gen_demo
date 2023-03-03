@@ -1,17 +1,14 @@
 import 'dart:ffi';
-import 'dart:io';
 
 import 'bindings/cm_headphone_motion_manager_bindings.dart';
-import 'package:path/path.dart' as path;
 
 class CMHeadPhoneManagerProvider {
+  CMHeadphoneMotionManagerLibrary? _library;
   CMHeadphoneMotionManager? manager;
 
   CMHeadphoneMotionManager initialize() {
-    final dylibPath = path.join(
-        Directory.current.path, 'lib' 'headers', 'CMHeadphoneMotionManager.h');
-
     final instance = CMHeadphoneMotionManagerLibrary(DynamicLibrary.process());
+    _library = instance;
     final cmManager = CMHeadphoneMotionManager.new1(instance);
     manager = cmManager;
     return cmManager;
@@ -19,7 +16,16 @@ class CMHeadPhoneManagerProvider {
 
   CMHeadphoneMotionManager getInstance() => manager ?? initialize();
 
-  void test() {
-    if (manager?.deviceMotionAvailable ?? false) {}
+  void startDeviceMotionUpdates() {
+    if (manager?.deviceMotionAvailable ?? false) {
+      manager?.startDeviceMotionUpdates();
+    }
+  }
+
+  Stream<double> getAttitudeY() async* {
+    while (true) {
+      yield manager?.deviceMotion?.attitude?.quaternion.y ?? 0.0;
+      await Future.delayed(const Duration(milliseconds: 10));
+    }
   }
 }

@@ -31,7 +31,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final provider = CMHeadPhoneManagerProvider();
-  int _counter = 0;
 
   @override
   void initState() {
@@ -39,11 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-    provider.test();
+  void _initDataCollection() {
+    provider.startDeviceMotionUpdates();
   }
 
   @override
@@ -59,16 +55,29 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            StreamBuilder<double>(
+              stream: provider.getAttitudeY(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data == 0.0) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  return Text(
+                    'Quaternion Y: ${snapshot.data}',
+                    style: const TextStyle(fontSize: 24),
+                  );
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _initDataCollection,
+        tooltip: 'Get Data',
         child: const Icon(Icons.add),
       ),
     );
